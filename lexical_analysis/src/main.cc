@@ -9,7 +9,7 @@ int main(int argc, char *argv[]) {
 
     std::string line;
 
-    while (std::cin>>line) {
+    while (std::getline(std::cin,line)) {
         std::list<Token*> tokenList;
         Token* tk = nullptr;
 

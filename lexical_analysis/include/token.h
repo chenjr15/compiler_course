@@ -26,7 +26,8 @@ enum TokenType {
     SEMICOLON,
     // 求解 问号?
     SLOVE,
-
+    // 分隔符 空白字符
+    SEPARATOR,
 };
 
 class Token {

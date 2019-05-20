@@ -67,12 +67,17 @@ int  paser_token(const char* p,Token* token) {
             // 尝试判断成标识符
             len =  get_str_val(p,token);
 
+        } else if (isspace(*p++)) {
+            // 对于空白字符要跳过多个
+            token_type = SEPARATOR;
+            while (isspace(*p++)) {
+                ++len;
+            }
+            token->setTokenType(token_type);
         } else {
             cout << "! can't paser "<<*p << endl;
             token->setTokenType(ERROR);
         }
-    } else {
-        len = 1;
     }
 
     return len;
@@ -129,7 +134,7 @@ int get_str_val(const char* p, Token* tk) {
 }
 
 string  token_to_str(TokenType tk) {
-    if (tk<0|| tk>SLOVE) {
+    if (tk<0|| tk>SEPARATOR) {
         return "ERROR";
     }
     string type_name_table[]= {
@@ -143,6 +148,7 @@ string  token_to_str(TokenType tk) {
         "L_PARENT","R_PARENT",
         "SEMICOLON",
         "SLOVE",
+        "SEPARATOR",
     };
     return type_name_table[tk];
 }
