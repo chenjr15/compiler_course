@@ -18,7 +18,7 @@ int main(int argc, char *argv[]) {
         int len= 0;
 
         while (*p) {
-            tk = new Token(ERROR);
+            tk = new Token(Token::ERROR);
             len = paser_token(p,tk);
             if (len<=0) {
                 std::cout<<"ERROR "<< p<<std::endl;
@@ -28,21 +28,8 @@ int main(int argc, char *argv[]) {
                 p = p+len;
             }
         }
-        for(auto pos = tokenList.begin(); pos!= tokenList.end(); pos++) {
-            Token* token = *pos;
-            std::cout << "token: "<<token_to_str(token->getTokenType());
-            if (token->getTokenType() == NUM) {
-                std::cout<<"\t"<<token->getNum();
-            } else if (token->getTokenType() == ID) {
-                putchar('\t');
-                for (size_t i = 0; i < 32&& *(token->getStr(nullptr)+i); i++) {
-                    putchar(*(token->getStr(nullptr)+i));
-                }
-                // putchar('\n');
-            } else if (token->getTokenType() == ERROR) {
-                fprintf(stderr,"ERROR!\n");
-            }
-            std::cout<< std::endl;
+        for(auto token = tokenList.begin(); token!= tokenList.end(); token++) {
+            std::cout<< (*token)->to_string() <<std::endl;
         }
         std::cout << "----" << std::endl;
     }

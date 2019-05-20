@@ -18,47 +18,47 @@ int  paser_token(const char* p,Token* token) {
     }
 
     int len = 1;
-    TokenType token_type = ERROR;
+    Token::TokenType token_type = Token::ERROR;
     switch (*p) {
     case 0:
-        token_type = STOP;
+        token_type = Token::STOP;
         break;
     case '+':
-        token_type = S_PLUS;
+        token_type = Token::S_PLUS;
         break;
     case '-':
-        token_type = S_MINUS;
+        token_type = Token::S_MINUS;
         break;
     case '*':
-        token_type = S_MULT;
+        token_type = Token::S_MULT;
         break;
     case '/':
-        token_type = S_DIV;
+        token_type = Token::S_DIV;
         break;
     case '^':
-        token_type = S_POW;
+        token_type = Token::S_POW;
         break;
     case '?':
-        token_type = SLOVE;
+        token_type = Token::SLOVE;
         break;
     case ';':
-        token_type = SEMICOLON;
+        token_type = Token::SEMICOLON;
         break;
     case '=':
-        token_type = ASSIGN;
+        token_type = Token::ASSIGN;
         break;
     case '(':
-        token_type = L_PARENT;
+        token_type = Token::L_PARENT;
         break;
     case ')':
-        token_type = R_PARENT;
+        token_type = Token::R_PARENT;
         break;
     default:
-        token_type = ERROR;
+        token_type = Token::ERROR;
         break;
     }
     token->setTokenType(token_type);
-    if (token_type == ERROR) {
+    if (token_type == Token::ERROR) {
         if (isdigit(*p)) {
             // 尝试判断成数字
             len = get_num_val(p,token);
@@ -69,14 +69,14 @@ int  paser_token(const char* p,Token* token) {
 
         } else if (isspace(*p++)) {
             // 对于空白字符要跳过多个
-            token_type = SEPARATOR;
+            token_type = Token::SEPARATOR;
             while (isspace(*p++)) {
                 ++len;
             }
             token->setTokenType(token_type);
         } else {
             cout << "! can't paser "<<*p << endl;
-            token->setTokenType(ERROR);
+            token->setTokenType(Token::ERROR);
         }
     }
 
@@ -99,10 +99,10 @@ int get_num_val(const char* p, Token* tk) {
     bool match = match_num(head,len);
     if (match) {
         tk->setNum( stod(test));
-        tk->setTokenType(NUM);
+        tk->setTokenType(Token::NUM);
 
     } else {
-        tk->setTokenType(ERROR);
+        tk->setTokenType(Token::ERROR);
     }
 
 
@@ -120,11 +120,11 @@ int get_str_val(const char* p, Token* tk) {
     }
     bool match =match_id(head,len);
     if (match) {
-        tk->setTokenType(ID);
+        tk->setTokenType(Token::ID);
         tk->setStr(head,len);
 
     } else {
-        tk->setTokenType(ERROR);
+        tk->setTokenType(Token::ERROR);
 
     }
 
@@ -132,26 +132,20 @@ int get_str_val(const char* p, Token* tk) {
 
     return len;
 }
+const string Token::type_name_table[]= {
+    "STOP",
+    "CONST",
+    "FUNC",
+    "ID",
+    "NUM",
+    "ASSIGN",
+    "S_PLUS","S_MINUS","S_MULT","S_DIV","S_POW",
+    "L_PARENT","R_PARENT",
+    "SEMICOLON",
+    "SLOVE",
+    "SEPARATOR",
+};
 
-string  token_to_str(TokenType tk) {
-    if (tk<0|| tk>SEPARATOR) {
-        return "ERROR";
-    }
-    string type_name_table[]= {
-        "STOP",
-        "CONST",
-        "FUNC",
-        "ID",
-        "NUM",
-        "ASSIGN",
-        "S_PLUS","S_MINUS","S_MULT","S_DIV","S_POW",
-        "L_PARENT","R_PARENT",
-        "SEMICOLON",
-        "SLOVE",
-        "SEPARATOR",
-    };
-    return type_name_table[tk];
-}
 
 void Token::setNum(double number) {
     val.numval = number;
@@ -183,11 +177,34 @@ char const* Token::getStr(char * ret) {
     return val.strval;
 }
 
-TokenType Token::getTokenType() {
+Token::TokenType Token::getTokenType() {
     return token_type;
 }
 void Token::setTokenType(TokenType t) {
     token_type = t;
+}
+std::string Token::to_string() {
+    if (token_type<0 && token_type<__TABLE_SIZE) {
+        return "<ERROR Token>";
+    }
+    string str;
+    str+="< ";
+    str+=type_name_table[token_type];
+    str+=" ";
+    switch (token_type) {
+    case FUNC:
+    case CONST:
+    case ID:
+        str+=val.strval;
+        break;
+    case NUM:
+        str+= std::to_string(val.numval);
+        break;
+    default:
+        break;
+    }
+    str+=" >";
+    return str;
 }
 Token::~Token() {
 }
