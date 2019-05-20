@@ -24,6 +24,8 @@ public:
         S_PLUS,S_MINUS,S_MULT,S_DIV,S_POW,
         // 括号
         L_PARENT,R_PARENT,
+        // 逗号 , 参数分隔符
+        COMMA,
         // 分号 ; 语句分隔符
         SEMICOLON,
         // 求解 问号?

@@ -3,6 +3,7 @@
 #include <regex>
 #include "token.h"
 #include "match.h"
+#include "predefined.h"
 using namespace std;
 
 
@@ -41,6 +42,9 @@ int  paser_token(const char* p,Token* token) {
     case '?':
         token_type = Token::SLOVE;
         break;
+    case ',':
+        token_type = Token::COMMA;
+        break;
     case ';':
         token_type = Token::SEMICOLON;
         break;
@@ -66,6 +70,12 @@ int  paser_token(const char* p,Token* token) {
         } else if (isalpha(*p)||*p == '_') {
             // 尝试判断成标识符
             len =  get_str_val(p,token);
+            // 对于标识符进一步判断他是否是常量和函数
+            if (isFunc(token->getStr(nullptr))) {
+                token->setTokenType(Token::FUNC);
+            } else if (isConst(token->getStr(nullptr))) {
+                token->setTokenType(Token::CONST);
+            }
 
         } else if (isspace(*p++)) {
             // 对于空白字符要跳过多个
@@ -141,6 +151,7 @@ const string Token::type_name_table[]= {
     "ASSIGN",
     "S_PLUS","S_MINUS","S_MULT","S_DIV","S_POW",
     "L_PARENT","R_PARENT",
+    "COMMA",
     "SEMICOLON",
     "SLOVE",
     "SEPARATOR",
