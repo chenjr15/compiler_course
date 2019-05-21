@@ -30,6 +30,7 @@ int main(int argc, char *argv[]) {
         }
         for(auto token = tokenList.begin(); token!= tokenList.end(); token++) {
             std::cout<< (*token)->to_string() <<std::endl;
+            delete *token;
         }
         std::cout << "----" << std::endl;
     }
