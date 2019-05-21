@@ -70,12 +70,6 @@ int  paser_token(const char* p,Token* token) {
         } else if (isalpha(*p)||*p == '_') {
             // 尝试判断成标识符
             len =  get_str_val(p,token);
-            // 对于标识符进一步判断他是否是常量和函数
-            if (isFunc(token->getStr(nullptr))) {
-                token->setTokenType(Token::FUNC);
-            } else if (isConst(token->getStr(nullptr))) {
-                token->setTokenType(Token::CONST);
-            }
 
         } else if (isspace(*p++)) {
             // 对于空白字符要跳过多个
@@ -131,6 +125,12 @@ int get_str_val(const char* p, Token* tk) {
     bool match =match_id(head,len);
     if (match) {
         tk->setTokenType(Token::ID);
+        // 对于标识符进一步判断他是否是常量和函数
+        if (isFunc(tk->getStr(nullptr))) {
+            tk->setTokenType(Token::FUNC);
+        } else if (isConst(tk->getStr(nullptr))) {
+            tk->setTokenType(Token::CONST);
+        }
         tk->setStr(head,len);
 
     } else {
