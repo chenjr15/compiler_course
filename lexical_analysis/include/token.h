@@ -37,7 +37,7 @@ public:
         __TABLE_SIZE
     };
 
-    Token(TokenType t):token_type(t) {};
+    Token(TokenType t ):token_type(t),val({.intval=0}) {};
     void setNum(double number);
     void setStr(const char* str,unsigned len);
     double getNum();
