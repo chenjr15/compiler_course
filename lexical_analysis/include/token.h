@@ -41,7 +41,7 @@ public:
     void setNum(double number);
     void setStr(const char* str,unsigned len);
     double getNum();
-    const char * getStr(char * ret);
+    std::string getStr(char * ret);
     TokenType getTokenType();
     void setTokenType(TokenType t);
     char getChar();

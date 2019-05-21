@@ -178,14 +178,17 @@ double Token::getNum() {
     return val.numval;
 }
 
-char const* Token::getStr(char * ret) {
+string Token::getStr(char * ret) {
     if (ret) {
         for (size_t i = 0; i < 32; i++) {
             *ret++ = val.strval[i];
         }
     }
-
-    return val.strval;
+    string _strval;
+    for (size_t i = 0; i < 32 && *(val.strval+i); i++) {
+        _strval += val.strval[i];
+    }
+    return _strval;
 }
 
 Token::TokenType Token::getTokenType() {
@@ -206,7 +209,7 @@ std::string Token::to_string() {
     case FUNC:
     case CONST:
     case ID:
-        str+=val.strval;
+        str += getStr(nullptr);
         break;
     case NUM:
         str+= std::to_string(val.numval);
