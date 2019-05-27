@@ -1,5 +1,5 @@
 #include "predefined.h"
-const unsigned func_name_table_size =9 ;
+const unsigned func_name_table_size =7 ;
 static std::string func_name_table[func_name_table_size] {
     "sin","cos",
     "tg","ctg",
