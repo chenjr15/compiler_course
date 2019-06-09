@@ -5,6 +5,8 @@ BIN		:= bin
 SRC		:= src
 INCLUDE	:= include
 LIB		:= lib
+LIBNAME := token
+
 
 LIBRARIES	:=
 
@@ -21,6 +23,9 @@ clean:
 
 run: all
 	./$(BIN)/$(EXECUTABLE)
+
+lib: $(SRC)/*
+	$(CC) $(C_FLAGS) -I$(INCLUDE) -L$(LIB) -shared -fPIC  $(filter-out %/main.cc,$^)  -o $(BIN)/$(LIBNAME).so
 
 $(BIN)/$(EXECUTABLE): $(SRC)/*
 	$(CC) $(C_FLAGS) -I$(INCLUDE) -L$(LIB) $^ -o $@ $(LIBRARIES)
