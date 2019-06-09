@@ -1,17 +1,42 @@
 #include <iostream>
 #include <cctype>
 #include <regex>
+#include <list>
 #include "token.h"
 #include "match.h"
 #include "predefined.h"
 using namespace std;
 
-
 /**
- * 解析字符串中的token
- * @param  {char*} p      :  待解析的字符串
+ *  解析一行语句中的token
+ * @param  {string} line          : 待解析的string
+ * @param  {vector<Token>} tokens : 解析结果会被push_back至此
+ * @return {bool}                 : 解析遇到问题时返回false
+ */
+bool  paser_token_line(string& line,list<Token>& tokens) {
+    // std::list<Token*> tokenList;
+    Token* tk = nullptr;
+    const  char * p = line.c_str();
+    // p++;
+    int len= 0;
+    while (*p) {
+        tk = new Token(Token::ERROR);
+        len = paser_token(p,tk);
+        if (len<=0) {
+            std::cout<<"ERROR "<< p<<std::endl;
+            break;
+        } else {
+            tokens.push_back(*tk);
+            p = p+len;
+        }
+    }
+    return !*p;
+}
+/**
+ *  流式解析字符串中的token
+ * @param  {char*} p      :  待解析的字符指针
  * @param  {Token*} token :  传入用于返回的token指针
- * @return {int}          :
+ * @return {int}          :  解析到的token长度
  */
 int  paser_token(const char* p,Token* token) {
     if (!p || !token) {
