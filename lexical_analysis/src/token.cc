@@ -13,7 +13,7 @@ using namespace std;
  * @param  {vector<Token>} tokens : 解析结果会被push_back至此
  * @return {bool}                 : 解析遇到问题时返回false
  */
-bool  paser_token_line(string& line,list<Token>& tokens) {
+bool  analyse_token_line(string& line,list<Token>& tokens) {
     // std::list<Token*> tokenList;
     Token* tk = nullptr;
     const  char * p = line.c_str();
@@ -21,7 +21,7 @@ bool  paser_token_line(string& line,list<Token>& tokens) {
     int len= 0;
     while (*p) {
         tk = new Token(Token::ERROR);
-        len = paser_token(p,tk);
+        len = analyse_token(p,tk);
         if (len<=0) {
             std::cout<<"ERROR "<< p<<std::endl;
             break;
@@ -38,7 +38,7 @@ bool  paser_token_line(string& line,list<Token>& tokens) {
  * @param  {Token*} token :  传入用于返回的token指针
  * @return {int}          :  解析到的token长度
  */
-int  paser_token(const char* p,Token* token) {
+int  analyse_token(const char* p,Token* token) {
     if (!p || !token) {
         return -1;
     }
@@ -104,7 +104,7 @@ int  paser_token(const char* p,Token* token) {
             }
             token->setTokenType(token_type);
         } else {
-            cout << "! can't paser "<<*p << endl;
+            cout << "! can't analyse "<<*p << endl;
             token->setTokenType(Token::ERROR);
         }
     }

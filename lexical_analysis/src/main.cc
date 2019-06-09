@@ -11,7 +11,7 @@ int main(int argc, char *argv[]) {
 
     while (std::getline(std::cin,line)) {
         std::list<Token> tokenList;
-        paser_token_line(line,tokenList);
+        analyse_token_line(line,tokenList);
         for(auto token = tokenList.begin(); token!= tokenList.end(); token++) {
             std::cout<< token->to_string() <<std::endl;
             // delete *token;

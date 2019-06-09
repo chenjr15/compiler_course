@@ -69,14 +69,14 @@ private:
  * @param  {vector<Token>} tokens : 解析结果会被push_back至此
  * @return {bool}                 : 解析遇到问题时返回false
  */
-bool  paser_token_line(std::string& line,std::list<Token>& tokens);
+bool analyse_token_line(std::string& line,std::list<Token>& tokens);
 /**
  *  流式解析字符串中的token
  * @param  {char*} p      :  待解析的字符指针
  * @param  {Token*} token :  传入用于返回的token指针
  * @return {int}          :  解析到的token长度
  */
-int  paser_token(const char* p,Token* token) ;
+int analyse_token(const char* p,Token* token) ;
 int get_num_val(const char* p, Token* tk);
 int get_str_val(const char* p,Token* tk);
 
