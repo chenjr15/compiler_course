@@ -149,6 +149,7 @@ int get_str_val(const char* p, Token* tk) {
     }
     bool match =match_id(head,len);
     if (match) {
+        tk->setStr(head,len);
         tk->setTokenType(Token::ID);
         // 对于标识符进一步判断他是否是常量和函数
         if (isFunc(tk->getStr(nullptr))) {
@@ -156,7 +157,6 @@ int get_str_val(const char* p, Token* tk) {
         } else if (isConst(tk->getStr(nullptr))) {
             tk->setTokenType(Token::CONST);
         }
-        tk->setStr(head,len);
 
     } else {
         tk->setTokenType(Token::ERROR);
