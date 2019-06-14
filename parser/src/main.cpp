@@ -9,15 +9,14 @@ int main(int argc, char *argv[]) {
     argc = *argv[0];
     if(argc<0) argc = 1;
 
-    std::string line;
-
+    string line;
+    cout<<"# >";
     while (std::getline(std::cin,line)) {
-        
-        
+
+
         std::list<Token> tokenList;
         analyse_token_line(line,tokenList);
-        if (tokenList.empty())
-        {
+        if (tokenList.empty()) {
             cout<< "Empty input."<<endl;
             continue;
         }
@@ -26,6 +25,8 @@ int main(int argc, char *argv[]) {
         }
         std::cout<< std::endl << "----" << std::endl;
         parse(tokenList);
+        cout<<"# >";
+
     }
 
 }
