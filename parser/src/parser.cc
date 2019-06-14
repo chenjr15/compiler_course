@@ -10,14 +10,48 @@ void print_stack(vector<TokenStatus>&  stack) {
     }
     cout<<endl;
 }
+
+
+void print_node(AstNode* t,int ident = 0) {
+
+
+    cout<<string(ident,' ');
+    cout<<t->value.to_string();
+    if (t->children.size()) {
+        cout<<"->";
+        print_node((t->children)[0],0);
+        for (size_t i = 1; i < t->children.size(); i++)
+        {
+            print_node((t->children)[i],ident+t->value.to_string().size()+2);
+        }
+        // cout<<endl;
+    }else
+    {
+    cout<<endl;
+        
+    }
+    
+
+    
+
+}
+void print_tree(vector<AstNode*> t){
+    for(auto node : t)
+    {
+        print_node(node);
+    }
+}
 AstNode* parse(list<Token> &tokens) {
-    vector<TokenStatus> slove= {{Token::STOP,0}};
+    vector<AstNode*> tree_stack;
+    vector<TokenStatus> stack= {{Token::STOP,0}};
+
     auto token_iter = tokens.begin();
     auto cur_token = *token_iter;
     int err = 0;
     while (true) {
-        cout<<"----------"<<endl;
-        print_stack(slove);
+        cout<<"\n\n----------"<<endl;
+        print_stack(stack);
+        print_tree(tree_stack);
         if (token_iter != tokens.end()) {
             cur_token = *token_iter;
         } else {
@@ -29,7 +63,7 @@ AstNode* parse(list<Token> &tokens) {
             continue;
         }
 
-        string action =  action_table[(--slove.end())->second][cur_token.getTokenType()];
+        string action =  action_table[(--stack.end())->second][cur_token.getTokenType()];
         cout<<"---> "<<action<<endl;
         if (action == "x") {
             err=1;
@@ -38,7 +72,8 @@ AstNode* parse(list<Token> &tokens) {
             // 移进
             int status = std::atoi(action.c_str()+1);
             TokenStatus t = {cur_token,status};
-            slove.push_back(t);
+            stack.push_back(t);
+            tree_stack.push_back(new AstNode(cur_token));
             ++token_iter;
         } else if (*action.c_str() == 'r') {
             // 规约
@@ -46,16 +81,25 @@ AstNode* parse(list<Token> &tokens) {
             int prod_index = std::atoi(action.c_str()+1);
             auto prod= production_rule_table[prod_index];
             // 匹配产生式右边的符号出栈
-            vector<Token> right;
-            for (size_t i = 0; i < prod.right_count; ++i) {
-                right.push_back((--slove.end())->first);
-                slove.pop_back();
+            vector<AstNode*> right;
+            for (int i = 0; i < prod.right_count; ++i) {
+                stack.pop_back();
+                right.push_back(*(--tree_stack.end()));
+                tree_stack.pop_back();
             }
+            // 剪枝
+            AstNode* new_node = new AstNode(prod.left);
+            for (int i = right.size() - 1; i >= 0; i--)
+            {
+                new_node->add_child(right[i]);
+            }
+            
+            tree_stack.push_back(new_node);
             // 根据goto表寻找当前规约后的新状态
-            int status = (--slove.end())->second;
+            int status = (--stack.end())->second;
             status = goto_table[status][prod.left-Token::TERMINATOR-1];
             // 将产生式左边及状态入栈
-            slove.push_back({prod.left,status});
+            stack.push_back({prod.left,status});
         } else if (action=="accept") {
             // 成功
             break;

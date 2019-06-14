@@ -10,14 +10,22 @@ int main(int argc, char *argv[]) {
     if(argc<0) argc = 1;
 
     string line;
-    cout<<"# >";
+    cout<<"\033[33m# >\033[0m";
     while (std::getline(std::cin,line)) {
 
 
         std::list<Token> tokenList;
-        analyse_token_line(line,tokenList);
+        bool analyse_success =analyse_token_line(line,tokenList);
+        if (!analyse_success)
+        {
+            cout<< "词法错误."<<endl;
+            cout<<"\033[33m# >\033[0m";
+            continue;
+        }
+        
         if (tokenList.empty()) {
             cout<< "Empty input."<<endl;
+            cout<<"\033[33m# >\033[0m";
             continue;
         }
         for(auto token = tokenList.begin(); token!= tokenList.end(); token++) {
@@ -25,7 +33,7 @@ int main(int argc, char *argv[]) {
         }
         std::cout<< std::endl << "----" << std::endl;
         parse(tokenList);
-        cout<<"# >";
+        cout<<"\033[33m# >\033[0m";
 
     }
 
