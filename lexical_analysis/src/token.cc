@@ -26,6 +26,7 @@ bool  analyse_token_line(string& line,list<Token>& tokens) {
             std::cout<<"ERROR "<< p<<std::endl;
             break;
         } else {
+            tk->setStrPosition(line.c_str() - p);
             tokens.push_back(*tk);
             p = p+len;
         }
@@ -168,18 +169,32 @@ int get_str_val(const char* p, Token* tk) {
     return len;
 }
 const string Token::type_name_table[]= {
-    "STOP",
-    "CONST",
-    "FUNC",
-    "ID",
-    "NUM",
-    "ASSIGN",
-    "S_PLUS","S_MINUS","S_MULT","S_DIV","S_POW",
-    "L_PARENT","R_PARENT",
-    "COMMA",
-    "SEMICOLON",
-    "SLOVE",
-    "SEPARATOR",
+    "#",
+    "const",
+    "func",
+    "id",
+    "num",
+    "=",
+    "+","-","*","/","^",
+    "(",")",
+    ",",
+    ";",
+    "?",
+    "separator",
+
+    "T",
+    /*   以下是非终结符 */
+    // 语句
+    "S",
+    // 表达式
+    "E",
+    // 　表达式１
+    "E'",
+    // 因子
+    "F",
+    // 参数
+    "ARG",
+    "NON_TERMINATOR",
 };
 
 
@@ -222,28 +237,56 @@ Token::TokenType Token::getTokenType() {
 void Token::setTokenType(TokenType t) {
     token_type = t;
 }
+
+string double_to_string(double __val) {
+    const int __n =
+        __gnu_cxx::__numeric_traits<double>::__max_exponent10 + 20;
+    return __gnu_cxx::__to_xstring<string>(&std::vsnprintf, __n,
+                                           "%g", __val);
+}
+
+
 std::string Token::to_string() {
     if (token_type<0 && token_type<__TABLE_SIZE) {
         return "<ERROR Token>";
     }
     string str;
-    str+="< ";
+    str+="'";
     str+=type_name_table[token_type];
-    str+=" ";
     switch (token_type) {
     case FUNC:
     case CONST:
     case ID:
+        str+=" ";
         str += getStr(nullptr);
         break;
     case NUM:
-        str+= std::to_string(val.numval);
+        str+=" ";
+        str+= double_to_string(val.numval);
         break;
     default:
         break;
     }
-    str+=" >";
+    str+="'";
     return str;
 }
 Token::~Token() {
+}
+bool Token::isTerminator() {
+    return this->token_type < TERMINATOR;
+}
+
+void Token::setStrPosition(unsigned a ) {
+    str_position = a;
+}
+unsigned Token::getStrPosition() {
+    return str_position;
+}
+
+std::string  Token::getTokenName( Token::TokenType t) {
+    if (t>=0&& t<__TABLE_SIZE) {
+        return type_name_table[t];
+    } else {
+        return "error";
+    }
 }

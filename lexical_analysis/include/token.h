@@ -9,7 +9,7 @@ public:
     enum TokenType {
         // 错误
         ERROR = -1,
-        // EOF
+        // EOF # 
         STOP = 0,
         // 常量
         CONST,
@@ -33,7 +33,20 @@ public:
         SLOVE,
         // 分隔符 空白字符
         SEPARATOR,
-
+        /* 　以上是终结符  */
+        TERMINATOR,
+        /*   以下是非终结符 */
+        // 语句
+        STATEMENT,
+        // 表达式
+        EXP,
+        // 　表达式１
+        EXP_1,
+        // 因子
+        FACTOR,
+        // 参数
+        ARG,
+        NON_TERMINATOR,
         // 用于标识该枚举常量表的最大大小
         __TABLE_SIZE
     };
@@ -47,7 +60,21 @@ public:
     void setTokenType(TokenType t);
     char getChar();
     void setChar(const char c);
+    /**
+     * 　判断是否是终结符
+     * @return {bool}  : 是终结符时返回True
+     */
+    bool isTerminator();
     std::string to_string();
+    /**
+     * 设置该token 对应的原字符传的位置
+     * */
+    void setStrPosition(unsigned a );
+    /**
+     * 获取该token 对应的原字符传的位置
+     * */
+    unsigned getStrPosition();
+    static std::string getTokenName(TokenType t);
     ~Token();
 private:
     TokenType token_type;
@@ -58,6 +85,10 @@ private:
         char charval;
         int intval;
     } val;
+    /**
+     * 该token 对应的原字符传的位置
+     * */
+    unsigned str_position;
     static const std::string type_name_table[];
     static const unsigned type_name_table_size = __TABLE_SIZE;
 };
