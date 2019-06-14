@@ -1,7 +1,9 @@
 #include <iostream>
+#include "cstdio"
 #include <list>
 #include "token.h"
-#include "cstdio"
+#include "parser.h"
+using namespace std;
 int main(int argc, char *argv[]) {
     /* make compiler happy */
     argc = *argv[0];
@@ -10,12 +12,20 @@ int main(int argc, char *argv[]) {
     std::string line;
 
     while (std::getline(std::cin,line)) {
+        
+        
         std::list<Token> tokenList;
         analyse_token_line(line,tokenList);
-        for(auto token = tokenList.begin(); token!= tokenList.end(); token++) {
-            std::cout<< token->to_string() <<std::endl;
+        if (tokenList.empty())
+        {
+            cout<< "Empty input."<<endl;
+            continue;
         }
-        std::cout << "----" << std::endl;
+        for(auto token = tokenList.begin(); token!= tokenList.end(); token++) {
+            std::cout<< token->to_string() <<", ";
+        }
+        std::cout<< std::endl << "----" << std::endl;
+        parse(tokenList);
     }
 
 }
